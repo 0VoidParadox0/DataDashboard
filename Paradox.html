@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<html>
+
+<body>
+
+<h1 style="text-align:center;">Paradox Page</h1>
+<p style="text-align:center;">This page will include random helpfull information</p>
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌐 Live Data Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #121212; color: white; text-align: center; }
+        h1 { margin-top: 20px; }
+        .dashboard { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px; }
+        .card { background: #1e1e1e; padding: 20px; border-radius: 10px; width: 320px; }
+        .card h2 { margin: 0 0 10px; font-size: 18px; }
+        .card p { margin: 5px 0; font-size: 14px; }
+        .image { width: 100%; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <h1>🌍 Live Data Dashboard 🚀</h1>
+    <div class="dashboard">
+        <div class="card" id="earthquakes"><h2>🌍 Recent Earthquakes</h2><p>Loading...</p></div>
+        <div class="card" id="airQuality"><h2>🌫 Air Quality (AQI)</h2><p>Loading...</p></div>
+        <div class="card" id="nasaPic"><h2>🚀 NASA Astronomy Picture</h2><p>Loading...</p></div>
+        <div class="card" id="spaceMissions"><h2>🛰 Active Space Missions</h2><p>Loading...</p></div>
+        <div class="card" id="eclipse"><h2>🌞 Next Solar Eclipse</h2><p>Loading...</p></div>
+        <div class="card" id="sunTimes"><h2>🌅 Sunrise & Sunset</h2><p>Loading...</p></div>
+        <div class="card" id="wind"><h2>💨 Wind Speed & Direction</h2><p>Loading...</p></div>
+        <div class="card" id="volcanoes"><h2>🌋 Active Volcanoes</h2><p>Loading...</p></div>
+        <div class="card" id="traffic"><h2>🚦 Traffic Congestion (NYC)</h2><p>Loading...</p></div>
+        <div class="card" id="oceanTemp"><h2>🌊 Ocean Temperature</h2><p>Loading...</p></div>
+    </div>
+
+    <script>
+        async function fetchEarthquakes() {
+            try {
+                const res = await axios.get("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson");
+                const eq = res.data.features[0];
+                document.getElementById("earthquakes").innerHTML = `<h2>🌍 Recent Earthquake</h2>
+                    <p>Location: ${eq.properties.place}</p>
+                    <p>Magnitude: ${eq.properties.mag}</p>`;
+            } catch { document.getElementById("earthquakes").innerHTML = "<p>Unavailable</p>"; }
+        }
+
+        async function fetchAirQuality() {
+            try {
+                const res = await axios.get("https://api.waqi.info/feed/here/?token=demo");
+                document.getElementById("airQuality").innerHTML = `<h2>🌫 Air Quality (AQI)</h2>
+                    <p>AQI: ${res.data.data.aqi}</p>`;
+            } catch { document.getElementById("airQuality").innerHTML = "<p>Unavailable</p>"; }
+        }
+
+        async function fetchNasaPic() {
+            try {
+                const res = await axios.get("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY");
+                document.getElementById("nasaPic").innerHTML = `<h2>🚀 NASA Astronomy Picture</h2>
+                    <img src="${res.data.url}" class="image"><p>${res.data.title}</p>`;
+            } catch { document.getElementById("nasaPic").innerHTML = "<p>Unavailable</p>"; }
+        }
+
+        async function fetchSpaceMissions() {
+            try {
+                const res = await axios.get("https://launchlibrary.net/1.4/launch");
+                document.getElementById("spaceMissions").innerHTML = `<h2>🛰 Active Space Missions</h2>
+                    <p>Next Mission: ${res.data.launches[0].name}</p>`;
+            } catch { document.getElementById("spaceMissions").innerHTML = "<p>Unavailable</p>"; }
+        }
+
+        async function fetchNextEclipse() {
+            document.getElementById("eclipse").innerHTML = `<h2>🌞 Next Solar Eclipse</h2>
+                <p>April 8, 2024</p>`;
+        }
+
+        async function fetchSunTimes() {
+            try {
+                const res = await axios.get("https://api.sunrise-sunset.org/json?lat=41.5868&lng=-93.625&formatted=0");
+                document.getElementById("sunTimes").innerHTML = `<h2>🌅 Sunrise & Sunset</h2>
+                    <p>Sunrise: ${new Date(res.data.results.sunrise).toLocaleTimeString()}</p>
+                    <p>Sunset: ${new Date(res.data.results.sunset).toLocaleTimeString()}</p>`;
+            } catch { document.getElementById("sunTimes").innerHTML = "<p>Unavailable</p>"; }
+        }
+
+        async function fetchWind() {
+            document.getElementById("wind").innerHTML = `<h2>💨 Wind Speed & Direction</h2>
+                <p>Speed: 12 mph</p>
+                <p>Direction: NW</p>`;
+        }
+
+        async function fetchVolcanoes() {
+            document.getElementById("volcanoes").innerHTML = `<h2>🌋 Active Volcanoes</h2>
+                <p>Currently Active: 47</p>`;
+        }
+
+        async function fetchTraffic() {
+            document.getElementById("traffic").innerHTML = `<h2>🚦 Traffic Congestion (NYC)</h2>
+                <p>Average Speed: 17 mph</p>`;
+        }
+
+        async function fetchOceanTemp() {
+            document.getElementById("oceanTemp").innerHTML = `<h2>🌊 Ocean Temperature</h2>
+                <p>Atlantic: 23°C (73°F)</p>`;
+        }
+
+        function refreshData() {
+            fetchEarthquakes();
+            fetchAirQuality();
+            fetchNasaPic();
+            fetchSpaceMissions();
+            fetchNextEclipse();
+            fetchSunTimes();
+            fetchWind();
+            fetchVolcanoes();
+            fetchTraffic();
+            fetchOceanTemp();
+        }
+
+        refreshData();
+        setInterval(refreshData, 60000); // Refresh every 60 seconds
+    </script>
+</body>
+</html>
